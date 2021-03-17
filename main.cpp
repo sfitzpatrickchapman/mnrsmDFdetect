@@ -26,22 +26,23 @@ static ifstream* inputFile() {
     cout << "Please enter the file path (with .csv): ";
     cin >> fileName;
 
-    /* Instantiate file pointer */
+    /* Create file var and attempt to open */
     ifstream* file = new ifstream(fileName, ifstream::in);
     file->open(fileName);
 
-    try {
-        if (file->is_open()) {
-            file->close();
-            return file;
-        } //TODO: check if correct formatting (csv type, etc.)
+    /* If file cannot be opened, loop until it does or quit */
+    while (!file->is_open()) {
+        cout << "ERROR: Invalid file path! Please try again." << endl;
+        cout << "Enter new file path or 'q' to quit: ";
+        cin >> fileName;
+
+        if (fileName == "q")
+            exit(1);
         else
-            throw 1; //TODO: loop to re-input fileName
+            file->open(fileName);
     }
-    catch (int x) {
-        cout << "Error #" << x << ": Please make sure there is a valid file and path." << endl;
-        exit(x);
-    }
+
+    return file;
 }
 
 /*------------------------------- MAIN METHOD -------------------------------*/
