@@ -6,8 +6,6 @@
 
 using namespace std;
 
-/* SCOTT'S CODE */
-
 // assigns boolean values from file to vals
 static void assignValsFromFile(bool* vals, int valsSize, int id /* , string fileName */ ) {
     /* TODO: add file reading here */
