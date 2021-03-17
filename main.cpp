@@ -1,8 +1,12 @@
 #include "ActionUnit.h"
 #include "Profile.h"
 #include <stdlib.h> /* srand, rand */
+#include <iostream>
+#include <fstream>
 
 using namespace std;
+
+/* SCOTT'S CODE */
 
 // assigns boolean values from file to vals
 static void assignValsFromFile(bool* vals, int valsSize, int id /* , string fileName */ ) {
@@ -14,9 +18,38 @@ static void assignValsFromFile(bool* vals, int valsSize, int id /* , string file
     }
 }
 
+// prompts/inputs fileName, checks if valid, and returns csv file pointer
+static ifstream* inputFile() {
+    string fileName;
+
+    /* Prompt and input */
+    cout << "Please enter the file path (with .csv): ";
+    cin >> fileName;
+
+    /* Instantiate file pointer */
+    ifstream* file = new ifstream(fileName, ifstream::in);
+    file->open(fileName);
+
+    try {
+        if (file->is_open()) {
+            file->close();
+            return file;
+        } //TODO: check if correct formatting (csv type, etc.)
+        else
+            throw 1; //TODO: loop to re-input fileName
+    }
+    catch (int x) {
+        cout << "Error #" << x << ": Please make sure there is a valid file and path." << endl;
+        exit(x);
+    }
+}
+
 /*------------------------------- MAIN METHOD -------------------------------*/
 
 int main(int argc, char **argv) {
+    //file stuff
+    ifstream* testFile = inputFile();
+    cout << testFile << endl;
 
     const int NUM_FRAMES = 16; // to be determined from CSV file
     const int NUM_ACTION_UNITS = 18;
@@ -42,6 +75,7 @@ int main(int argc, char **argv) {
 
     /* --------- CLEAN UP --------- */
 
+    delete testFile;
     for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
         delete aulist[i];
     }
