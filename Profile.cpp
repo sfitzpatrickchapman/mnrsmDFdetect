@@ -10,10 +10,10 @@ Profile::Profile() {
 }
 
 // overloaded constructor: same as default but assigns the name (used when creating a new profile)
-Profile::Profile(string name) {
+Profile::Profile(string name, int currNumFrames) {
     this->name = name;
     initializeEmptyMatrices();
-    this->currNumFrames = 0;
+    this->currNumFrames = currNumFrames;
     this->totNumFrames = 0;
     this->totNumVideos = 0;
 }
@@ -53,10 +53,6 @@ void Profile::calcProbMatrix(ActionUnit** au) {
         au1 = au[i];
         for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
             au2 = au[j];
-            cout << "\nAU1:" << endl;
-            au1->print();
-            cout << "\nAU2:" << endl;
-            au2->print();
             sum = 0;
             // iterate through currAU's activeVals and add up all equalities
             for(int k = 0; k < numFrames; ++k) {
@@ -125,6 +121,10 @@ void Profile::initializeEmptyMatrices() {
     for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
         probMatrix[i] = new float[NUM_ACTION_UNITS];
         avgMatrix[i] = new float[NUM_ACTION_UNITS];
+        for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
+            probMatrix[i][j] = 0;
+            avgMatrix[i][j] = 0;
+        }
     }
 }
 

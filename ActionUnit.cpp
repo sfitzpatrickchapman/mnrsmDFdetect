@@ -33,7 +33,6 @@ void ActionUnit::setActiveVals(bool* vals) {
     /* TODO: implement error checking for vals size != numFrames */
     for(int i = 0; i < numFrames; ++i) {
         activeVals[i] = vals[i];
-        cout << "activeVals[" << i << "] = " << activeVals[i] << endl;
     }
 }
 

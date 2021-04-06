@@ -10,7 +10,7 @@ class Profile {
 
     public:
         Profile(); // default constructor: name = “”, probMatrix is empty 2D ptr array, totNumFrames & totNumVideos = 0 (unused)
-        Profile(string name); // overloaded constructor: same as default but assigns the name (used when creating a new profile)
+        Profile(string name, int currNumFrames); // overloaded constructor: same as default but assigns the name (used when creating a new profile) and numFrames
         Profile(string* saveData); // overloaded constructor: string array of Profile info loaded from save file, calls initializeFromFormattedString
         ~Profile(); // destructor: delete probMatrix and avgMatrix
 
