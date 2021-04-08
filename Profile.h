@@ -3,6 +3,7 @@
 
 #include "ActionUnit.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -17,12 +18,14 @@ class Profile {
         void calcProbMatrix(ActionUnit** au); // takes in ptr to array of ptrs to action units, fills probMatrix with float values determined from action units (####more detailed description below#####)
         void updateAvgMatrix(); // updates avgMatrix with new probMatrix values (calculation: avgMatrix[i][j] =(totNumFrames * avgMatrix[i][j] + probMatrix[i][j]) / (totNumFrames + currNumFrames);
 
+        float compareTo(const Profile& other); // compare two profiles' average matrices, returns similarity value
         void print(); // prints ActionUnit stats
 
         static const int NUM_ACTION_UNITS = 18; // number of action units used, which is 18 currently (if a static const int is not possible, delete static and keep const)
 
 
         // MEMBER VARIABLES
+        int id; // id from database, might not be needed?
         string name; // name of the person to whom the profile belongs
 
         float** probMatrix; // 2D ptr array where the the pair-probability values are stored (used for current file upload)
@@ -35,7 +38,7 @@ class Profile {
     private:
         void initializeEmptyMatrices(); // called by default constructor and new profile constructor to initialize matrices to empty
         void initializeFromFormattedString(string* str); // reads formatted string array and assigns values (called from overloaded constructor)
-        string* createFormattedString(); // creates formatted string
+        string* createFormattedString(); // creates formatted string, might not be necessary
 };
 
 #endif

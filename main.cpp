@@ -73,7 +73,60 @@ static string getInputFileName() {
     return fileName;
 }
 
-/*------------------------------- MAIN METHOD -------------------------------*/
+////////////////////////////////////////////////////////////////////////////////
+// USER METHODS
+
+static void viewExistingProfiles() {
+    /*
+    display profiles list
+    OPTION: select profile OR main menu
+    if select profile, get existing name from user
+    display profile data
+    OPTION: select different profile OR upload file OR delete profile OR main menu
+        if select different profile, go back up ^
+        if upload file, call getExistingFile
+        if delete profile, delete and save to database
+    */
+}
+
+static void createNewProfile() {
+    /*
+    get new name from user
+    OPTION: upload new file? Yes OR No
+        if yes: call getExistingFile
+        if no: return to main menu
+    */
+}
+
+static void uploadFile() {
+    /*
+    OPTION: existing profile? Yes OR No
+        if yes: getExistingName, getExistingFile, processFile, save to database
+        if no: createNewProfile() (with option to automatically say yes to upload file)
+    */
+}
+
+static void compareProfiles(/*TEMPORARY PARAMETERS!*/ Profile* p1, Profile* p2) {
+    /*
+    get existing name 1
+    get existing name 2
+    compare profiles
+    OPTION: compare another? Yes OR No
+        if yes: repeat loop
+        if no: return to main menu
+    */
+    cout << "\n\n----------------------------------------" << endl;
+    cout << "Comparing " << p1->name << " to " << p2->name << ":" << endl;
+    float comparisonVal = p1->compareTo(*p2) * 100;
+    cout << "Profiles are %" << comparisonVal << " similar." << endl;
+    cout << "----------------------------------------\n" << endl;
+}
+
+static void saveAndQuit() {
+
+}
+
+/*----------------------------------- MAIN -----------------------------------*/
 
 int main(int argc, char **argv) {
 
@@ -89,12 +142,13 @@ int main(int argc, char **argv) {
     p1->calcProbMatrix(auList);
     p1->updateAvgMatrix();
     p1->print();
+    compareProfiles(p1, p1);
+
 
     /* --------- CLEAN UP --------- */
 
-    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+    for(int i = 0; i < NUM_ACTION_UNITS; ++i)
         delete auList[i];
-    }
     delete[] auList;
     delete p1;
 

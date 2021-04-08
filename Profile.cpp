@@ -89,6 +89,21 @@ void Profile::updateAvgMatrix() {
     totNumVideos++;
 }
 
+ // compare two profiles' average matrices, returns similarity value
+float Profile::compareTo(const Profile& other) {
+    float simValue = 0;
+    int comparisonCount = 0;
+    for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
+        for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
+            float diff = avgMatrix[i][j] - other.avgMatrix[i][j];
+            simValue += 1 - abs(diff);
+            comparisonCount++;
+        }
+    }
+    simValue = simValue / (float)comparisonCount;
+    return simValue;
+}
+
 // prints ActionUnit stats
 void Profile::print() {
     cout << "|------------------------------- Profile Name: " << name << " -------------------------------|" << endl;
