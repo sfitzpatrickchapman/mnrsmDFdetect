@@ -10,6 +10,15 @@ Profile::Profile() {
 }
 
 // overloaded constructor: same as default but assigns the name (used when creating a new profile)
+Profile::Profile(string name) {
+    this->name = name;
+    initializeEmptyMatrices();
+    this->currNumFrames = 0;
+    this->totNumFrames = 0;
+    this->totNumVideos = 0;
+}
+
+// overloaded constructor: same as default but assigns the name (used when creating a new profile) and currNumFrames
 Profile::Profile(string name, int currNumFrames) {
     this->name = name;
     initializeEmptyMatrices();
@@ -150,5 +159,5 @@ void Profile::initializeFromFormattedString(string* str) {
 
 // creates formatted string
 string* Profile::createFormattedString() {
-
+    return 0;
 }

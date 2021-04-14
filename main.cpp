@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const string PATH = "proc/";
+
 // assigns boolean values from file to vals
 static void fillAUList(ActionUnit** auList, int auListSize, string fileName) {
 
@@ -50,8 +52,9 @@ static string getInputFileName() {
     string fileName;
 
     /* Prompt and input */
-    cout << "Please enter the processed file path (should end in _PROCESSED.txt): ";
+    cout << "Please enter the processed file path (should end in _proc.txt): ";
     cin >> fileName;
+    fileName = PATH + fileName;
 
     /* Create file var and attempt to open */
     ifstream file;
@@ -130,26 +133,51 @@ static void saveAndQuit() {
 
 int main(int argc, char **argv) {
 
-    string processedFileName = getInputFileName();
-
-    const int NUM_FRAMES = getNumFrames(processedFileName); // to be determined from CSV file
+    int numFrames = 0;
     const int NUM_ACTION_UNITS = 18; // constant number of action units
 
-    ActionUnit** auList = new ActionUnit*[NUM_ACTION_UNITS];
-    fillAUList(auList, NUM_ACTION_UNITS, processedFileName);
+    Profile *p1 = new Profile("AOC");
 
-    Profile *p1 = new Profile("Donald Trump", NUM_FRAMES);
-    p1->calcProbMatrix(auList);
-    p1->updateAvgMatrix();
+    string input = "";
+    cout << "-------------------- DeepFake Detection Program --------------------\n\n" << endl;
+    cout << "Input new file for AOC? \'Y\' or \'N\'" << endl;
+    cin >> input;
+
+    while(input == "Y") {
+        string processedFileName = getInputFileName();
+        numFrames = getNumFrames(processedFileName); // to be determined from CSV file
+        p1->currNumFrames = numFrames;
+        ActionUnit** auList = new ActionUnit*[NUM_ACTION_UNITS];
+        fillAUList(auList, NUM_ACTION_UNITS, processedFileName);
+
+        p1->calcProbMatrix(auList);
+        p1->print();
+        cout << "Add matrix to average? \'Y\' or \'N\'" << endl;
+        cin >> input;
+        if(input == "Y") {
+            p1->updateAvgMatrix();
+            p1->print();
+        }
+
+        // clean-up
+        for(int i = 0; i < NUM_ACTION_UNITS; ++i)
+            delete auList[i];
+        delete[] auList;
+
+        // prompt user again
+        cout << "-------------------- DeepFake Detection Program --------------------\n\n" << endl;
+        cout << "Input new file for AOC? \'Y\' or \'N\'" << endl;
+        cin >> input;
+    }
+
+    cout << "Final profile:" << endl;
     p1->print();
-    compareProfiles(p1, p1);
+
+    cout << "\n\n\nProgram finished." << endl;
 
 
     /* --------- CLEAN UP --------- */
 
-    for(int i = 0; i < NUM_ACTION_UNITS; ++i)
-        delete auList[i];
-    delete[] auList;
     delete p1;
 
     return 0;

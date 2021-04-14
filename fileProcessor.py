@@ -9,8 +9,11 @@
 
 import sys # for command line args
 
+rawPath = "raw/"
+procPath = "proc/"
+
 userFile = sys.argv[1]
-rawFile = open(userFile, 'r')
+rawFile = open(rawPath + userFile, 'r')
 
 lineCount = 0
 successColumn = 4
@@ -20,22 +23,22 @@ firstLine = True
 # count amount of successful lines and store in the processed file
 for line in rawFile:
     row = line.split(",")
-    if row[successColumn] == "1":
+    if row[successColumn] == "1" or row[successColumn] == " 1" or row[successColumn] == "  1":
         lineCount += 1
 rawFile.close()
-fileName = sys.argv[1][0: -4] + "_PROCESSED.txt"
+fileName = sys.argv[1][0: -4] + "_proc.txt"
 
 # process file
-processedFile = open(fileName, 'w')
+processedFile = open(procPath + fileName, 'w')
 processedFile.write(str(lineCount) + "\n")
-rawFile = open(userFile, 'r')
+rawFile = open(rawPath + userFile, 'r')
 
 for line in rawFile:
     row = line.split(",")
     if firstLine == True:
         firstLine = False
         continue
-    if row[successColumn] == "0":
+    if row[successColumn] == "0" or row[successColumn] == " 0" or row[successColumn] == "  0":
         continue
     else:
         lineToAdd = ""
