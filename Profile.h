@@ -20,7 +20,7 @@ class Profile {
         void updateAvgMatrix(); // updates avgMatrix with new probMatrix values (calculation: avgMatrix[i][j] =(totNumFrames * avgMatrix[i][j] + probMatrix[i][j]) / (totNumFrames + currNumFrames);
 
         float compareTo(const Profile& other); // compare two profiles' average matrices, returns similarity value
-        void print(); // prints ActionUnit stats
+        void print(int type); // prints ActionUnit stats
 
         static const int NUM_ACTION_UNITS = 18; // number of action units used, which is 18 currently (if a static const int is not possible, delete static and keep const)
 

@@ -89,7 +89,7 @@ void Profile::updateAvgMatrix() {
         // calculate new average for each matrix element
         for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
             for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
-                avgMatrix[i][j] = ((float) totNumFrames * avgMatrix[i][j] + probMatrix[i][j]) / (float)(totNumFrames + currNumFrames);
+                avgMatrix[i][j] = ((float) totNumFrames * avgMatrix[i][j] + currNumFrames * probMatrix[i][j]) / (float)(totNumFrames + currNumFrames);
             }
         }
     }
@@ -114,28 +114,32 @@ float Profile::compareTo(const Profile& other) {
 }
 
 // prints ActionUnit stats
-void Profile::print() {
-    cout << "|------------------------------- Profile Name: " << name << " -------------------------------|" << endl;
-    cout << "Amount of frames in current video: " << currNumFrames << endl;
-    cout << "Total amount of frames: " << totNumFrames << endl;
-    cout << "Total amount of videos: " << totNumVideos << endl;
+void Profile::print(int type) {
+    if (type == 0) {
+        cout<<"| "<<name<<" | "<<totNumVideos<<" videos total | "<<totNumFrames<<" frames total" << endl;
+    } else if (type == 1) {
+        cout << "|------------------------------- Profile Name: " << name << " -------------------------------|" << endl;
+        cout << "Amount of frames in current video: " << currNumFrames << endl;
+        cout << "Total amount of frames: " << totNumFrames << endl;
+        cout << "Total amount of videos: " << totNumVideos << endl;
 
-    cout << "\nProbability Matrix for current video:\n" << endl;
-    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
-        for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
-            printf("%.2f ", probMatrix[i][j]);
+        cout << "\nProbability Matrix for current video:\n" << endl;
+        for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+            for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
+                printf("%.2f ", probMatrix[i][j]);
+            }
+            cout << "\n" << endl;
         }
-        cout << "\n" << endl;
-    }
 
-    cout << "\nAverage Matrix for profile:\n" << endl;
-    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
-        for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
-            printf("%.2f ", avgMatrix[i][j]);
+        cout << "\nAverage Matrix for profile:\n" << endl;
+        for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+            for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
+                printf("%.2f ", avgMatrix[i][j]);
+            }
+            cout << "\n" << endl;
         }
-        cout << "\n" << endl;
+        cout << "-----------------------------------------------------------------------------------------" << endl;
     }
-    cout << "-----------------------------------------------------------------------------------------" << endl;
 }
 
 // called by default constructor and new profile constructor to initialize matrices to empty
