@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int NUM_ACTION_UNITS = 18; // constant number of action units
+static const int NUM_ACTION_UNITS = 18; // constant number of action units
 
 static ProfileManager* pm = new ProfileManager();
 
@@ -15,7 +15,7 @@ static ProfileManager* pm = new ProfileManager();
 static void viewExistingProfiles();
 static void createNewProfile(int choice = 0);
 static void uploadFile(int choice = 0, string name = "");
-static void compareProfiles(/*TEMPORARY PARAMETERS!*/ Profile* p1, Profile* p2);
+static void compareProfiles();
 static void saveAndQuit();
 
 // assigns boolean values from file to vals

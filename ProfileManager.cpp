@@ -45,8 +45,15 @@ void ProfileManager::addProfile(Profile* p) {
 
 bool ProfileManager::deleteProfile(string name) {
     int i = getProfileIndex(name);
+    Profile *p = profiles->at(i); // profile to delete
     if(i != -1) {
-        delete profiles->at(i);
+        string fileName = (p->FILE_PATH + name + ".txt");
+        if(remove(fileName.c_str()) != 0) {
+            cout << fileName << endl;
+            cout << "ERROR: Could not delete file" << endl;
+            return false;
+        }
+        delete p;
         profiles->erase(profiles->begin()+i);
     }
     return (i != -1);
