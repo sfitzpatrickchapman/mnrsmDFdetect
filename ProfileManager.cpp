@@ -11,11 +11,16 @@ ProfileManager::~ProfileManager() {
 }
 
 void ProfileManager::loadProfiles() {
-    // implement
+    string path = "profiles";
+    for(auto& p : fs::directory_iterator(path)) {
+        addProfile(new Profile(p.path()));
+    }
 }
 
 void ProfileManager::saveProfiles() {
-    // implement
+    for(int i = 0; i < profiles->size(); ++i) {
+        profiles->at(i)->saveToFile();
+    }
 }
 
 bool ProfileManager::contains(string name) {

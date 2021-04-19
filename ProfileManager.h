@@ -4,7 +4,10 @@
 #include "Profile.h"
 #include <iostream>
 #include <vector>
+#include <string>
+#include <experimental/filesystem>
 
+namespace fs = std::experimental::filesystem;
 using namespace std;
 
 class ProfileManager {

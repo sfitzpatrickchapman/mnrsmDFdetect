@@ -9,32 +9,28 @@ Profile::Profile() {
     this->totNumVideos = 0;
 }
 
-// overloaded constructor: same as default but assigns the name (used when creating a new profile)
-Profile::Profile(string name) {
-    this->name = name;
+// overloaded constructor: Profile info loaded from save file
+Profile::Profile(string saveFileName) {
+    ifstream file;
+    string line;
+    float cell;
+    file.open(saveFileName);
+    getline(file, this->name);
+    getline(file, line);
+    this->currNumFrames = stoi(line);
+    getline(file, line);
+    this->totNumFrames = stoi(line);
+    getline(file, line);
+    this->totNumVideos = stoi(line);
     initializeEmptyMatrices();
-    this->currNumFrames = 0;
-    this->totNumFrames = 0;
-    this->totNumVideos = 0;
-}
-
-// overloaded constructor: same as default but assigns the name (used when creating a new profile) and currNumFrames
-Profile::Profile(string name, int currNumFrames) {
-    this->name = name;
-    initializeEmptyMatrices();
-    this->currNumFrames = currNumFrames;
-    this->totNumFrames = 0;
-    this->totNumVideos = 0;
-}
-
-// overloaded constructor: string of Profile info loaded from save file
-Profile::Profile(string* saveData) {
-    /* TODO: Implement saveData creating and reading methods */
-    this->name = "";
-    initializeEmptyMatrices();
-    this->currNumFrames = 0;
-    this->totNumFrames = 0;
-    this->totNumVideos = 0;
+    for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
+        for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
+            getline(file, line);
+            cell = stof(line);
+            avgMatrix[i][j] = cell;
+        }
+    }
+    file.close();
 }
 
 // destructor: delete probMatrix and avgMatrix
@@ -54,21 +50,22 @@ void Profile::calcProbMatrix(ActionUnit** au) {
     ActionUnit* au1; // ActionUnit comparison 1 ptr
     ActionUnit* au2; // ActionUnit comparison 2 ptr
     const int numFrames = au[0]->getNumFrames();
-    int sum;
-    float avg;
+    int sum = 0; // increments when au1 and au2 both equal 1 simultaneously
+    int total = 0; // increments when at least one of au1 or au2 equal 1
+    float avg; // final calculation of sum / total
 
     // iterates over upper diagonal of matrix, excluding main diagonal
     for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
         au1 = au[i];
         for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
             au2 = au[j];
-            sum = 0;
             // iterate through currAU's activeVals and add up all equalities
             for(int k = 0; k < numFrames; ++k) {
-                sum += ( au1->activeVals[k] == au2->activeVals[k] );
+                sum += (au1->activeVals[k] && au2->activeVals[k]);
+                total += au1->activeVals[k] || au2->activeVals[k];
             }
             // calculate average number of equalities
-            avg = (float) sum / (float) numFrames;
+            avg = (float) sum / (float) total;
             // set corresponding matrix entry to calculated avg
             probMatrix[i][j] = avg;
         }
@@ -113,6 +110,20 @@ float Profile::compareTo(const Profile& other) {
     return simValue;
 }
 
+float Profile::compareMatrices() {
+    float simValue = 0;
+    int comparisonCount = 0;
+    for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
+        for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
+            float diff = avgMatrix[i][j] - probMatrix[i][j];
+            simValue += 1 - abs(diff);
+            comparisonCount++;
+        }
+    }
+    simValue = simValue / (float)comparisonCount;
+    return simValue;
+}
+
 // prints ActionUnit stats
 void Profile::print(int type) {
     if (type == 0) {
@@ -142,6 +153,23 @@ void Profile::print(int type) {
     }
 }
 
+// save data to a file in profiles directory
+void Profile::saveToFile() {
+    ofstream file;
+    string path = FILE_PATH + name + ".txt";
+    file.open(path);
+    file << name << endl;
+    file << currNumFrames << endl;
+    file << totNumFrames << endl;
+    file << totNumVideos << endl;
+    for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
+        for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
+            file << avgMatrix[i][j] << endl;
+        }
+    }
+    file.close();
+}
+
 // called by default constructor and new profile constructor to initialize matrices to empty
 void Profile::initializeEmptyMatrices() {
     this->probMatrix = new float*[NUM_ACTION_UNITS];
@@ -154,14 +182,4 @@ void Profile::initializeEmptyMatrices() {
             avgMatrix[i][j] = 0;
         }
     }
-}
-
-// reads formatted string and assigns values (called from overloaded constructor)
-void Profile::initializeFromFormattedString(string* str) {
-
-}
-
-// creates formatted string
-string* Profile::createFormattedString() {
-    return 0;
 }

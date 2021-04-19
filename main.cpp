@@ -26,6 +26,7 @@ static void fillAUList(ActionUnit** auList, int auListSize, string fileName) {
 
     // get numFrames
     string currLine;
+    cin.ignore();
     getline(file, currLine);
     int numFrames = stoi(currLine);
 
@@ -118,10 +119,13 @@ static int getInput(string choices[], int size) {
 static string getExistingName() {
     string input = "";
     while(!pm->contains(input)) {
-        cout << "Please enter name of an existing profile: ";
-        cin.clear();
-        fflush(stdin);
+        cout << "Please enter name of an existing profile or \"quit\" to quit: ";
+        cin.ignore();
         getline(cin, input);
+        if (input == "Quit" || input == "quit" || input == "QUIT") {
+            input = "quit";
+            break;
+        }
     }
     return input;
 }
@@ -148,6 +152,8 @@ static void viewExistingProfiles() {
     int choice = getInput(choices, 2);
     if (choice == 1) {
         string name = getExistingName();
+        if(name == "quit")
+            return;
         Profile* p = pm->getProfile(name);
         cout << endl;
         p->print(1);
@@ -187,8 +193,7 @@ static void createNewProfile(int choice) {
 
     cout << "\n\n------- Create New Profile --------\n" << endl;
     cout << "Name: ";
-    cin.clear();
-    fflush(stdin);
+    cin.ignore();
     getline(cin, name);
     p->name = name;
     pm->addProfile(p);
@@ -230,6 +235,8 @@ static void uploadFile(int choice, string name) {
         }
         if(name == "") {
             name = getExistingName();
+            if(name == "quit")
+                return;
         }
         p = pm->getProfile(name);
 
@@ -277,6 +284,7 @@ static void uploadFile(int choice, string name) {
 
         p->print(1);
         cout << endl;
+        cout << "Data is %" << (p->compareMatrices()*100) << " similar to profile.\n" << endl;
         string choices3[2] = {"Update profile with this data", "Ignore data"};
         choice = getInput(choices3, 2);
         if (choice == 1) {
@@ -324,8 +332,12 @@ static void compareProfiles() {
     cout << "\n\n-------- Compare Proiles ----------\n" << endl;
     cout << "Profile 1: ";
     name1 = getExistingName();
+    if(name1 == "quit")
+        return;
     cout << "Profile 2: ";
     name2 = getExistingName();
+    if(name2 == "quit")
+        return;
 
     p1 = pm->getProfile(name1);
     p2 = pm->getProfile(name2);
@@ -347,11 +359,13 @@ static void compareProfiles() {
 
 static void saveAndQuit() {
     // save profile info to database/file
+    pm->saveProfiles();
 }
 
 /*----------------------------------- MAIN -----------------------------------*/
 
 int main(int argc, char **argv) {
+    pm->loadProfiles();
     int choice = 0;
     while(choice != 5) {
         cout << "\n\n-------------------- DeepFake Detection Program --------------------\n" << endl;

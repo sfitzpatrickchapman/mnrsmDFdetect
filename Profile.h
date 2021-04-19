@@ -3,6 +3,7 @@
 
 #include "ActionUnit.h"
 #include <iostream>
+#include <fstream>
 #include <cmath>
 
 using namespace std;
@@ -11,18 +12,20 @@ class Profile {
 
     public:
         Profile(); // default constructor: name = “”, probMatrix is empty 2D ptr array, totNumFrames & totNumVideos = 0 (unused)
-        Profile(string name); // overloaded constructor: same as default but assigns the name (used when creating a new profile)
-        Profile(string name, int currNumFrames); // overloaded constructor: same as default but assigns the name (used when creating a new profile) and numFrames
-        Profile(string* saveData); // overloaded constructor: string array of Profile info loaded from save file, calls initializeFromFormattedString
+        Profile(string saveFileName); // overloaded constructor: Profile info loaded from save file
         ~Profile(); // destructor: delete probMatrix and avgMatrix
 
         void calcProbMatrix(ActionUnit** au); // takes in ptr to array of ptrs to action units, fills probMatrix with float values determined from action units (####more detailed description below#####)
         void updateAvgMatrix(); // updates avgMatrix with new probMatrix values (calculation: avgMatrix[i][j] =(totNumFrames * avgMatrix[i][j] + probMatrix[i][j]) / (totNumFrames + currNumFrames);
 
         float compareTo(const Profile& other); // compare two profiles' average matrices, returns similarity value
+        float compareMatrices(); // compares probMatrix to avgMatrix (purpose is to show the user how similar the new file is to the existing data for the profile)
         void print(int type); // prints ActionUnit stats
 
-        static const int NUM_ACTION_UNITS = 18; // number of action units used, which is 18 currently (if a static const int is not possible, delete static and keep const)
+        void saveToFile(); // save data to a file in profiles directory
+
+        const int NUM_ACTION_UNITS = 18; // number of action units used, which is 18 currently (if a static const int is not possible, delete static and keep const)
+        const string FILE_PATH = "profiles/";
 
 
         // MEMBER VARIABLES
@@ -38,8 +41,6 @@ class Profile {
 
     private:
         void initializeEmptyMatrices(); // called by default constructor and new profile constructor to initialize matrices to empty
-        void initializeFromFormattedString(string* str); // reads formatted string array and assigns values (called from overloaded constructor)
-        string* createFormattedString(); // creates formatted string, might not be necessary
 };
 
 #endif
