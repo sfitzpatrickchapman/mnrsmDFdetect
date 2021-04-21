@@ -16,8 +16,7 @@ Profile::Profile(string saveFileName) {
     float cell;
     file.open(saveFileName);
     getline(file, this->name);
-    getline(file, line);
-    this->currNumFrames = stoi(line);
+    this->currNumFrames = 0;
     getline(file, line);
     this->totNumFrames = stoi(line);
     getline(file, line);
@@ -125,31 +124,30 @@ float Profile::compareMatrices() {
 }
 
 // prints ActionUnit stats
+/*
+    type 0: prints only profile header
+    type 1: prints header and average matrix
+    type 2: prints full profile info (header, avg matrix, and current matrix)
+*/
+
 void Profile::print(int type) {
     if (type == 0) {
-        cout<<"| "<<name<<" | "<<totNumVideos<<" videos total | "<<totNumFrames<<" frames total" << endl;
-    } else if (type == 1) {
-        cout << "|------------------------------- Profile Name: " << name << " -------------------------------|" << endl;
-        cout << "Amount of frames in current video: " << currNumFrames << endl;
-        cout << "Total amount of frames: " << totNumFrames << endl;
+        cout<<"| "<<name<<" | "<<totNumVideos<<" videos total | "<<totNumFrames<<" frames total"<<endl;
+    } else {
+        cout << "\n" << endl;
+        cout << "|------------------------------------ Profile Name: " << name << " ------------------------------------|\n" << endl;
         cout << "Total amount of videos: " << totNumVideos << endl;
-
-        cout << "\nProbability Matrix for current video:\n" << endl;
-        for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
-            for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
-                printf("%.2f ", probMatrix[i][j]);
-            }
-            cout << "\n" << endl;
-        }
+        cout << "Total amount of frames: " << totNumFrames << endl;
 
         cout << "\nAverage Matrix for profile:\n" << endl;
-        for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
-            for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
-                printf("%.2f ", avgMatrix[i][j]);
-            }
-            cout << "\n" << endl;
+        printMatrix(avgMatrix);
+
+        if(type == 2) {
+            cout << "\nProbability Matrix for current video:" << endl;
+            cout << "Amount of frames in current video: " << currNumFrames << "\n" << endl;
+            printMatrix(probMatrix);
         }
-        cout << "-----------------------------------------------------------------------------------------" << endl;
+        cout << "------------------------------------------------------------------------------------------------\n" << endl;
     }
 }
 
@@ -159,7 +157,6 @@ void Profile::saveToFile() {
     string path = FILE_PATH + name + ".txt";
     file.open(path);
     file << name << endl;
-    file << currNumFrames << endl;
     file << totNumFrames << endl;
     file << totNumVideos << endl;
     for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
@@ -182,4 +179,19 @@ void Profile::initializeEmptyMatrices() {
             avgMatrix[i][j] = 0;
         }
     }
+}
+
+void Profile::printMatrix(float** m) {
+    cout << "       ";
+    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+        cout << AU_LIST[i] << " ";
+    }
+    cout << "\n     +------------------------------------------------------------------------------------------";
+    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+        cout << "\n     |\n" << AU_LIST[i] << " | ";
+        for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
+            printf("%.2f ", m[i][j]);
+        }
+    }
+    cout << "\n\n";
 }

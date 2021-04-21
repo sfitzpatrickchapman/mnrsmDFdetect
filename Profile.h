@@ -26,6 +26,7 @@ class Profile {
 
         const int NUM_ACTION_UNITS = 18; // number of action units used, which is 18 currently (if a static const int is not possible, delete static and keep const)
         const string FILE_PATH = "profiles/";
+        const string AU_LIST[18] = {"AU01","AU02","AU04","AU05","AU06","AU07","AU09","AU10","AU12","AU14","AU15","AU17","AU20","AU23","AU25","AU26","AU28","AU45"};
 
 
         // MEMBER VARIABLES
@@ -41,6 +42,7 @@ class Profile {
 
     private:
         void initializeEmptyMatrices(); // called by default constructor and new profile constructor to initialize matrices to empty
+        void printMatrix(float** m);
 };
 
 #endif

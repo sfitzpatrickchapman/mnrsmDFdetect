@@ -282,7 +282,7 @@ static void uploadFile(int choice, string name) {
             delete auList[i];
         delete[] auList;
 
-        p->print(1);
+        p->print(2);
         cout << endl;
         cout << "Data is %" << (p->compareMatrices()*100) << " similar to profile.\n" << endl;
         string choices3[2] = {"Update profile with this data", "Ignore data"};
