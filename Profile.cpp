@@ -152,9 +152,9 @@ void Profile::print(int type) {
 }
 
 // save data to a file in profiles directory
-void Profile::saveToFile() {
+void Profile::saveProfileToFile() {
     ofstream file;
-    string path = FILE_PATH + name + ".txt";
+    string path = "profiles/" + name + ".txt";
     file.open(path);
     file << name << endl;
     file << totNumFrames << endl;
@@ -162,6 +162,23 @@ void Profile::saveToFile() {
     for(int i = 0; i < NUM_ACTION_UNITS-1; ++i) {
         for(int j = i+1; j < NUM_ACTION_UNITS; ++j) {
             file << avgMatrix[i][j] << endl;
+        }
+    }
+    file.close();
+}
+
+// save data to a file in profiles directory
+void Profile::saveDataToFile() {
+    ofstream file;
+    string path = "data/" + name + ".txt";
+    file.open(path);
+    file << name << endl;
+    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+        for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
+            if(avgMatrix[i][j] == 0)
+                file << "-1" << endl;
+            else
+                file << avgMatrix[i][j] << endl;
         }
     }
     file.close();

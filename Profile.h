@@ -22,10 +22,10 @@ class Profile {
         float compareMatrices(); // compares probMatrix to avgMatrix (purpose is to show the user how similar the new file is to the existing data for the profile)
         void print(int type); // prints ActionUnit stats
 
-        void saveToFile(); // save data to a file in profiles directory
+        void saveProfileToFile(); // save profile info to a file in profiles directory
+        void saveDataToFile(); // save data for visualization to a file in data directory
 
         const int NUM_ACTION_UNITS = 18; // number of action units used, which is 18 currently (if a static const int is not possible, delete static and keep const)
-        const string FILE_PATH = "profiles/";
         const string AU_LIST[18] = {"AU01","AU02","AU04","AU05","AU06","AU07","AU09","AU10","AU12","AU14","AU15","AU17","AU20","AU23","AU25","AU26","AU28","AU45"};
 
 

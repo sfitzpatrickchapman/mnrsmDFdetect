@@ -19,7 +19,8 @@ void ProfileManager::loadProfiles() {
 
 void ProfileManager::saveProfiles() {
     for(int i = 0; i < profiles->size(); ++i) {
-        profiles->at(i)->saveToFile();
+        profiles->at(i)->saveProfileToFile();
+        profiles->at(i)->saveDataToFile();
     }
 }
 
@@ -47,7 +48,7 @@ bool ProfileManager::deleteProfile(string name) {
     int i = getProfileIndex(name);
     Profile *p = profiles->at(i); // profile to delete
     if(i != -1) {
-        string fileName = (p->FILE_PATH + name + ".txt");
+        string fileName = "profiles/" + name + ".txt";
         if(remove(fileName.c_str()) != 0) {
             cout << fileName << endl;
             cout << "ERROR: Could not delete file" << endl;
