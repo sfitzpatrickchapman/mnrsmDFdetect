@@ -169,8 +169,9 @@ void Profile::saveProfileToFile() {
 
 // save data to a file in profiles directory
 void Profile::saveDataToFile() {
+    // save to other directory
     ofstream file;
-    string path = "data/" + name + ".txt";
+    string path = "data/other/" + name + ".txt";
     file.open(path);
     file << name << endl;
     for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
@@ -180,6 +181,21 @@ void Profile::saveDataToFile() {
             else
                 file << avgMatrix[i][j] << endl;
         }
+    }
+    file.close();
+
+    // save to csv directory
+    path = "data/csv/" + name + ".csv";
+    file.open(path);
+    file << name << "," << endl;
+    for(int i = 0; i < NUM_ACTION_UNITS; ++i) {
+        for(int j = 0; j < NUM_ACTION_UNITS; ++j) {
+            if(avgMatrix[i][j] == 0)
+                file << "-1" << ",";
+            else
+                file << avgMatrix[i][j] << ",";
+        }
+        file << endl;
     }
     file.close();
 }
