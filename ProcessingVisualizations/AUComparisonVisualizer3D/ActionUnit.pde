@@ -41,15 +41,26 @@ public class ActionUnit {
   
   public void connect(ActionUnit adjacentAU) {
     int[] adjCoords = adjacentAU.getCoords(); //[0]=x, [1]=y, [2]=z
+    
+    //create coordinates with all info
+    // home point coords
     float thisX = (float)x;
     float thisY = (float)y;
     float thisZ = (float)z;
-    float adjX = adjCoords[0];
-    float adjY = adjCoords[1];
-    float adjZ = adjCoords[2];
+    // adjacent target coords
+    float adjX = (float)adjCoords[0];
+    float adjY = (float)adjCoords[1];
+    float adjZ = (float)adjCoords[2];
+    // calculate coords that will create appropriate triangle
+    // this will be the tip that is furthest from the origin
+    float triX = 0;
+    float triY = 0;
+    float triZ = 0;
+    
     
     //bezior params: xyz 1st anchor, xyz 1st ctrl pt, xyz 2nd ctrl pt, xyz 2nd anchor
     //bezier(thisX,thisY,thisZ, ,,, ,,, adjX,adjY,adjZ);
+    bezier(thisX,thisY,thisZ,  triX,triY,triZ,  triX,triY,triZ,  adjX,adjY,adjZ);
   }
   
   public int[] getCoords() {
